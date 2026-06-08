@@ -168,76 +168,26 @@
     <div class="sec-note">적정 운영 기준 20 — 26℃ · 실외 최고기온은 검은 점선 · 28℃ 이상 구간은 빨간색 · 주말·공휴일 날짜 빨간색 표시</div>
   </div>
 
-  <!-- 3-1. 본사 -->
   <div class="chart-card">
-    <div class="chart-card-title">3-1. 서울 본사 구역별 일평균 실내 온도</div>
-    <div class="legend-row">
-      <span><i style="background:#2D6BFF"></i>실내온도</span>
-      <span><i style="background:#111827;height:0;border-top:2px dashed #111827;width:18px"></i>실외 최고기온</span>
-      <span><i style="background:rgba(229,72,77,0.15);border:1px dashed rgba(229,72,77,0.4);width:12px;height:12px;border-radius:2px"></i>28℃ 이상</span>
-    </div>
-    <div class="chart-2col">
+    <div class="chart-3col">
       <div>
-        <div class="chart-sub-title">3-1.1. 서울 1층</div>
-        <div class="cw h200"><canvas id="c-temp-hq-1f"></canvas></div>
+        <div class="chart-sub-title">본사 · 서울 3층</div>
+        <div class="legend-row" id="lg-temp-hq"></div>
+        <div class="cw h220"><canvas id="c-temp-hq"></canvas></div>
       </div>
       <div>
-        <div class="chart-sub-title">3-1.2. 서울 3층</div>
-        <div class="cw h200"><canvas id="c-temp-hq-3f"></canvas></div>
+        <div class="chart-sub-title">지역센터 · 부천</div>
+        <div class="legend-row" id="lg-temp-regional"></div>
+        <div class="cw h220"><canvas id="c-temp-regional"></canvas></div>
+      </div>
+      <div>
+        <div class="chart-sub-title">가치만드소 · 광주</div>
+        <div class="legend-row" id="lg-temp-gachi"></div>
+        <div class="cw h220"><canvas id="c-temp-gachi"></canvas></div>
       </div>
     </div>
     <div class="cmnt" style="margin-top:12px"><div class="cmnt-bar" style="background:#2D6BFF"></div>
-      <div class="cmnt-text">서울 본사 1층과 3층은 5월 중순 이후 외기온 상승과 함께 실내 온도가 상승하는 흐름이 확인됩니다. 3층은 5월 17~18일 28℃를 초과하여 냉방 가동 대응이 필요한 구간이 발생했습니다.</div>
-    </div>
-  </div>
-
-  <!-- 3-2. 지역센터 -->
-  <div class="chart-card" style="margin-top:14px">
-    <div class="chart-card-title">3-2. 지역센터 지역별 일평균 실내 온도</div>
-    <div class="legend-row">
-      <span><i style="background:#2D6BFF"></i>실내온도</span>
-      <span><i style="background:#111827;height:0;border-top:2px dashed #111827;width:18px"></i>실외 최고기온</span>
-      <span><i style="background:rgba(229,72,77,0.15);border:1px dashed rgba(229,72,77,0.4);width:12px;height:12px;border-radius:2px"></i>28℃ 이상</span>
-    </div>
-    <div class="chart-3col">
-      <div>
-        <div class="chart-sub-title">3-2.1. 진주</div>
-        <div class="cw h200"><canvas id="c-temp-jinju"></canvas></div>
-      </div>
-      <div>
-        <div class="chart-sub-title">3-2.2. 충북</div>
-        <div class="cw h200"><canvas id="c-temp-chungbuk"></canvas></div>
-      </div>
-      <div>
-        <div class="chart-sub-title">3-2.3. 부천</div>
-        <div class="cw h200"><canvas id="c-temp-bucheon"></canvas></div>
-      </div>
-    </div>
-    <div class="cmnt" style="margin-top:12px"><div class="cmnt-bar" style="background:#E5484D"></div>
-      <div class="cmnt-text">지역센터 3개 지역 모두 5월 14~18일 구간에 실내 온도 상승이 집중되었습니다. 진주는 외기 영향을 가장 크게 받아 28℃ 초과 구간이 나타났으며, 충북·부천은 상대적으로 안정적인 편입니다.</div>
-    </div>
-  </div>
-
-  <!-- 3-3. 가치만드소 -->
-  <div class="chart-card" style="margin-top:14px">
-    <div class="chart-card-title">3-3. 가치만드소 지역별 일평균 실내 온도</div>
-    <div class="legend-row">
-      <span><i style="background:#2D6BFF"></i>실내온도</span>
-      <span><i style="background:#111827;height:0;border-top:2px dashed #111827;width:18px"></i>실외 최고기온</span>
-      <span><i style="background:rgba(229,72,77,0.15);border:1px dashed rgba(229,72,77,0.4);width:12px;height:12px;border-radius:2px"></i>28℃ 이상</span>
-    </div>
-    <div class="chart-2col">
-      <div>
-        <div class="chart-sub-title">3-3.1. 광주</div>
-        <div class="cw h200"><canvas id="c-temp-gwangju"></canvas></div>
-      </div>
-      <div>
-        <div class="chart-sub-title">3-3.2. 아산</div>
-        <div class="cw h200"><canvas id="c-temp-asan"></canvas></div>
-      </div>
-    </div>
-    <div class="cmnt" style="margin-top:12px"><div class="cmnt-bar" style="background:#F59E0B"></div>
-      <div class="cmnt-text">가치만드소 광주·아산은 5월 전반적으로 24~26℃ 범위를 유지했습니다. 5월 하순 외기 상승 구간에 광주가 일부 28℃에 근접하여 냉방 대응 여부를 확인할 필요가 있습니다.</div>
+      <div class="cmnt-text">본사, 지역센터, 가치만드소별 여러 구역 및 지역 중 실외 최고기온 대비 실내 평균온도 편차가 크게 나타난 곳을 대표 사례로 선정하였습니다. 해당 지역들은 다른 지역 대비 실내 평균온도가 낮게 유지되는 경향을 보였으며, 실외 고온일에도 온도 편차가 확인되어 냉난방기 가동 수요가 있었을 가능성이 있습니다.</div>
     </div>
   </div>
 </section>
@@ -249,9 +199,9 @@
     <div class="sec-note">본 가동시간은 진동센서 기반 추정값이며 실제 가동시간과 차이가 있을 수 있습니다 · 주말·공휴일 날짜 빨간색 표시</div>
   </div>
 
-  <!-- 4-1. 서울 본사 -->
+  <!-- 서울 본사 -->
   <div class="chart-card">
-    <div class="chart-card-title">4-1. 서울 본사 구역별 일평균 냉난방기 가동시간</div>
+    <div class="chart-card-title">서울 본사 구역별 일평균 냉난방기 가동시간</div>
     <div class="legend-row" id="lg-oper-hq"></div>
     <div class="cw h220"><canvas id="c-oper-hq"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#2D6BFF"></div>
@@ -259,9 +209,9 @@
     </div>
   </div>
 
-  <!-- 4-2. 지역센터 북부 -->
+  <!-- 지역센터 북부 -->
   <div class="chart-card">
-    <div class="chart-card-title">4-2. 지역센터 북부(부천) 상세별 일평균 냉난방기 가동시간</div>
+    <div class="chart-card-title">지역센터 북부(부천) 상세별 일평균 냉난방기 가동시간</div>
     <div class="legend-row" id="lg-oper-north"></div>
     <div class="cw h200"><canvas id="c-oper-north"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#22C55E"></div>
@@ -269,9 +219,9 @@
     </div>
   </div>
 
-  <!-- 4-3. 지역센터 중부 -->
+  <!-- 지역센터 중부 -->
   <div class="chart-card">
-    <div class="chart-card-title">4-3. 지역센터 중부(충북) 상세별 일평균 냉난방기 가동시간</div>
+    <div class="chart-card-title">지역센터 중부(충북) 상세별 일평균 냉난방기 가동시간</div>
     <div class="legend-row" id="lg-oper-middle"></div>
     <div class="cw h200"><canvas id="c-oper-middle"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#F59E0B"></div>
@@ -279,9 +229,9 @@
     </div>
   </div>
 
-  <!-- 4-4. 지역센터 남부 -->
+  <!-- 지역센터 남부 -->
   <div class="chart-card">
-    <div class="chart-card-title">4-4. 지역센터 남부(진주) 상세별 일평균 냉난방기 가동시간</div>
+    <div class="chart-card-title">지역센터 남부(진주) 상세별 일평균 냉난방기 가동시간</div>
     <div class="legend-row" id="lg-oper-south"></div>
     <div class="cw h200"><canvas id="c-oper-south"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#E5484D"></div>
@@ -289,9 +239,9 @@
     </div>
   </div>
 
-  <!-- 4-5. 가치만드소 -->
+  <!-- 가치만드소 -->
   <div class="chart-card">
-    <div class="chart-card-title">4-5. 가치만드소 상세별 일평균 냉난방기 가동시간</div>
+    <div class="chart-card-title">가치만드소 상세별 일평균 냉난방기 가동시간</div>
     <div class="legend-row" id="lg-oper-gachi"></div>
     <div class="cw h200"><canvas id="c-oper-gachi"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#7C3AED"></div>
@@ -307,12 +257,12 @@
     <div class="sec-sub">4월 → 5월 총가동시간 기준 · 증감 큰 순</div>
   </div>
 
-  <!-- 5-1. 근무시간 -->
+  <!-- 근무시간 -->
   <div class="chart-card">
-    <div class="chart-card-title">5-1. 전월 대비 냉난방기 사용량 증가 구역 (평일 근무시간 기준)</div>
+    <div class="chart-card-title">전월 대비 냉난방기 사용량 증가 구역 (평일 근무시간 기준)</div>
     <table class="analysis-table increase-table">
       <colgroup>
-        <col style="width:6%"><col class="inc-col-zone"><col class="inc-col-num"><col class="inc-col-num"><col class="inc-col-num"><col class="inc-col-num">
+        <col class="inc-col-rank"><col class="inc-col-zone"><col class="inc-col-num"><col class="inc-col-num"><col class="inc-col-num"><col class="inc-col-rate">
       </colgroup>
       <thead>
         <tr><th>#</th><th>구역</th><th>전월 (h)</th><th>당월 (h)</th><th>증감 (h)</th><th>증감률</th></tr>
@@ -324,12 +274,12 @@
     </div>
   </div>
 
-  <!-- 5-2. 근무시간외 -->
+  <!-- 근무시간외 -->
   <div class="chart-card">
-    <div class="chart-card-title">5-2. 전월 대비 냉난방기 사용량 증가 구역 (평일 근무시간외 기준)</div>
+    <div class="chart-card-title">전월 대비 냉난방기 사용량 증가 구역 (평일 근무시간외 기준)</div>
     <table class="analysis-table increase-table">
       <colgroup>
-        <col style="width:6%"><col class="inc-col-zone"><col class="inc-col-num"><col class="inc-col-num"><col class="inc-col-num"><col class="inc-col-num">
+        <col class="inc-col-rank"><col class="inc-col-zone"><col class="inc-col-num"><col class="inc-col-num"><col class="inc-col-num"><col class="inc-col-rate">
       </colgroup>
       <thead>
         <tr><th>#</th><th>구역</th><th>전월 (h)</th><th>당월 (h)</th><th>증감 (h)</th><th>증감률</th></tr>
@@ -349,6 +299,6 @@
 </footer>
 </div>
 
-<script src="app.js"></script>
+<script src="app.js?v=20260608-2"></script>
 </body>
 </html>
