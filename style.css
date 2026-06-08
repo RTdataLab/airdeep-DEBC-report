@@ -823,8 +823,10 @@ section {
   margin-top: 12px;
 }
 
-.increase-table col.inc-col-zone { width: 28%; }
-.increase-table col.inc-col-num  { width: 18%; }
+.increase-table col.inc-col-rank { width: 6%; }
+.increase-table col.inc-col-zone { width: 34%; }
+.increase-table col.inc-col-num  { width: 17%; }
+.increase-table col.inc-col-rate { width: 16%; }
 
 .increase-table th,
 .increase-table td {
@@ -836,14 +838,10 @@ section {
 .increase-table th:nth-child(1),
 .increase-table td:nth-child(1) { text-align: left; padding-left: 14px; white-space: nowrap; }
 
-.increase-table th:nth-child(2),
-.increase-table td:nth-child(2),
-.increase-table th:nth-child(3),
-.increase-table td:nth-child(3),
-.increase-table th:nth-child(4),
-.increase-table td:nth-child(4),
-.increase-table th:nth-child(5),
-.increase-table td:nth-child(5) { text-align: center; }
+.increase-table th:nth-child(1),
+.increase-table td:nth-child(1),
+.increase-table th:nth-child(n+3),
+.increase-table td:nth-child(n+3) { text-align: center; }
 
 .increase-table td.inc-zone strong {
   display: block;
@@ -852,7 +850,25 @@ section {
   white-space: nowrap;
 }
 
-.increase-table td.num { text-align: center; padding-left: 8px; padding-right: 8px; }
+.increase-table td.num {
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.increase-table th:last-child,
+.increase-table td:last-child {
+  text-align: center;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.increase-table td.inc-rate span {
+  display: inline-block;
+  min-width: 76px;
+  text-align: left;
+}
 
 
 /* ══════════════════════════════════════════════════════════════
