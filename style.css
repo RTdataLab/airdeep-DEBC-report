@@ -963,6 +963,16 @@ section {
 .delta-up { font-weight: 700; color: var(--alert); }
 .delta-dn { font-weight: 700; color: var(--ok); }
 
+.inc-top5 td.risk {
+  color: #F04452;
+  font-weight: 800;
+}
+
+.inc-top5 td.ok-txt {
+  color: #009E49;
+  font-weight: 800;
+}
+
 
 /* ══════════════════════════════════════════════════════════════
    13. 푸터
