@@ -14,7 +14,7 @@ let HOLIDAYS = new Set();
 
 /* ✏️ 데이터 파일 설정표 — 데이터팀 파일명을 그대로 적으면 됩니다. (CSV만 지원) */
 const DATA_FILES = {
-  tempHQ:       '3-1.csv',  // 섹션3-1 — 본사 대표(서울 3층) 실내온도
+  tempHQ:       '3-1.csv',  // 섹션3-1 — 본사 대표(서울 1층) 실내온도
   tempRegional: '3-2.csv',  // 섹션3-2 — 지역센터 대표(부천) 실내온도
   tempGachi:    '3-3.csv',  // 섹션3-3 — 가치만드소 대표(광주) 실내온도
   operHQ:       '4-1.csv',  // 섹션4-1 — 서울 본사 구역별 가동시간
@@ -22,13 +22,13 @@ const DATA_FILES = {
   operMiddle:   '4-3.csv',  // 섹션4-3 — 지역센터 중부 가동시간
   operSouth:    '4-4.csv',  // 섹션4-4 — 지역센터 남부 가동시간
   operGachi:    '4-5.csv',  // 섹션4-5 — 가치만드소 가동시간
-  incWork:      '5-1.csv',  // 섹션5-1 — 전월대비 증가 TOP5(근무시간)
-  incOff:       '5-2.csv'   // 섹션5-2 — 전월대비 증가 TOP5(근무외)
+  incWork:      '5-1.csv',  // 섹션5-1 — 사용량 TOP5(근무시간)
+  incOff:       '5-2.csv'   // 섹션5-2 — 사용량 TOP5(근무외)
 };
 
 /* ✏️ 공휴일 날짜 — 주말(토·일)은 자동 계산되고, 여기엔 공휴일만 적으면 됩니다.
    해당 날짜의 x축 라벨이 빨간색으로 표시됩니다. (매달 이 줄만 갱신) */
-const PUBLIC_HOLIDAYS = ['2026-05-01', '2026-05-05', '2026-05-25']; // 근로자의날 · 어린이날 · 대체공휴일
+const PUBLIC_HOLIDAYS = []; // 2026년 4월 평일 공휴일 없음
 
 function isHolidayDate(s){
   const m = String(s ?? '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -65,37 +65,70 @@ function parseCSV(text){
 
 function num(v){
   if(v === undefined || v === null || v === '') return null;
-  const n = parseFloat(v); return isNaN(n) ? null : n;
+  const n = parseFloat(String(v).replace(/,/g, '')); return isNaN(n) ? null : n;
+}
+
+function normKey(v){
+  return String(v ?? '').replace(/\s+/g, '').replace(/[()_\-·:]/g, '').toLowerCase();
+}
+
+function findCol(header, candidates, fallback=0){
+  const normalized = header.map(normKey);
+  for(const c of candidates){
+    const idx = normalized.indexOf(normKey(c));
+    if(idx >= 0) return idx;
+  }
+  for(const c of candidates){
+    const key = normKey(c);
+    const idx = normalized.findIndex(h => h.includes(key) || key.includes(h));
+    if(idx >= 0) return idx;
+  }
+  return fallback;
+}
+
+function pickValue(row, aliases){
+  for(const alias of aliases){
+    if(Object.prototype.hasOwnProperty.call(row, alias) && row[alias] !== '') return row[alias];
+  }
+  const keys = Object.keys(row);
+  for(const alias of aliases){
+    const target = normKey(alias);
+    const key = keys.find(k => normKey(k) === target || normKey(k).includes(target) || target.includes(normKey(k)));
+    if(key && row[key] !== '') return row[key];
+  }
+  return undefined;
 }
 
 function toSeriesMap(rows){
-  const names = rows[0].slice(1);
-  const map = {}; names.forEach(n => map[n] = []);
-  const labels = [];
-  for(let r=1;r<rows.length;r++){
-    const d = rows[r][0] ?? '';
-    const m = d.match(/(\d{4})-(\d{2})-(\d{2})/);
-    labels.push(m ? String(Number(m[3])) : d);
-    names.forEach((n,ci)=> map[n].push(num(rows[r][ci+1])));
-  }
-  return { names, map, labels };
-}
-
-function toTempSeriesMap(rows){
   const header = rows[0];
-  const dateIdx = header.findIndex(h => h === '날짜');
-  const outdoorIdx = header.findIndex(h => h === OUTDOOR_KEY);
-  const innerIdx = header.findIndex((h,i) => i !== dateIdx && i !== outdoorIdx);
-  const innerName = header[innerIdx] || '실내 평균온도';
-  const names = [innerName, OUTDOOR_KEY];
-  const map = { [innerName]: [], [OUTDOOR_KEY]: [] };
+  const dateIdx = findCol(header, ['일자', '날짜', 'date'], 0);
+  const names = header.filter((_, i) => i !== dateIdx);
+  const map = {}; names.forEach(n => map[n] = []);
   const labels = [];
   for(let r=1;r<rows.length;r++){
     const d = rows[r][dateIdx] ?? '';
     const m = d.match(/(\d{4})-(\d{2})-(\d{2})/);
     if(!m) continue;
     labels.push(m ? String(Number(m[3])) : d);
-    map[innerName].push(num(rows[r][innerIdx]));
+    names.forEach(n=> map[n].push(num(rows[r][header.indexOf(n)])));
+  }
+  return { names, map, labels };
+}
+
+function toTempSeriesMap(rows){
+  const header = rows[0];
+  const dateIdx = findCol(header, ['날짜', '일자', 'date'], 0);
+  const outdoorIdx = findCol(header, [OUTDOOR_KEY, '실외최고기온', '최고기온', '최고기온℃', 'outdoor'], 1);
+  const innerNames = header.filter((_,i) => i !== dateIdx && i !== outdoorIdx);
+  const names = [...innerNames, OUTDOOR_KEY];
+  const map = {}; names.forEach(n => map[n] = []);
+  const labels = [];
+  for(let r=1;r<rows.length;r++){
+    const d = rows[r][dateIdx] ?? '';
+    const m = d.match(/(\d{4})-(\d{2})-(\d{2})/);
+    if(!m) continue;
+    labels.push(m ? String(Number(m[3])) : d);
+    innerNames.forEach(n => map[n].push(num(rows[r][header.indexOf(n)])));
     map[OUTDOOR_KEY].push(num(rows[r][outdoorIdx]));
   }
   return { names, map, labels };
@@ -133,7 +166,7 @@ const redZonePlugin = {
   }
 };
 
-/* x축: 5월 1~31일 전체 표시 */
+/* x축: 4월 1~30일 전체 표시 */
 const X_TICKS = { maxRotation:0, autoSkip:false, font:{size:8}, color:tickColor() };
 
 /* ── 온도 라인 차트 (실외 점선 + 28℃ 빨간 구역) ───────────── */
@@ -219,29 +252,23 @@ function fmtZoneName(v){
     .trim();
 }
 
-/* ── 전월 대비 증가 TOP5 표 (11열) ───────────────────────────
-   장비당 일평균 가동시간 증감 기준 내림차순 · 상위 5개 · 증감시간(h) 표기 */
+/* ── 4월 사용량 TOP5 표 ─────────────────────────────────────
+   장비당 일평균 가동시간 기준 내림차순 · 상위 5개 */
 function fillIncreaseTable(tbodyId, rows){
   const tb = document.getElementById(tbodyId);
   if(!tb) return;
   const data = rows.map(r=>{
-    const ctrl    = num(r['제어기_장치수']) ?? num(r['제어기수']) ?? 0;
-    const prevTot = num(r['4월_총가동시간']) ?? num(r['4월_총가동시간_시간']) ?? num(r['총가동시간_시간_4월']) ?? 0;
-    const prevAvg = num(r['4월_장비당_일평균가동시간']) ?? num(r['장비당_일평균가동시간_시간_4월']) ?? 0;
-    const curTot  = num(r['5월_총가동시간']) ?? num(r['5월_총가동시간_시간']) ?? num(r['총가동시간_시간_5월']) ?? 0;
-    const curAvg  = num(r['5월_장비당_일평균가동시간']) ?? num(r['장비당_일평균가동시간_시간_5월']) ?? 0;
+    const ctrl    = num(pickValue(r, ['제어기_장치수', '제어기수', '제어기수량', '장치수'])) ?? 0;
+    const curTot  = num(pickValue(r, ['4월_총가동시간', '4월_총가동시간_시간', '총가동시간_시간_4월', '당월_총가동시간', '당월 총가동(h)'])) ?? 0;
+    const curAvg  = num(pickValue(r, ['4월_장비당_일평균가동시간', '장비당_일평균가동시간_시간_4월', '당월_장비당_일평균가동시간', '당월 장비당 일평균(h)'])) ?? 0;
     return {
-      gubun:  r['구분'] || '',
-      region: r['지역'] || '',
-      hub:    fmtZoneName(r['허브_위치'] || r['HUB_NICKNAME'] || ''),
-      ctrl, prevTot, prevAvg, curTot, curAvg,
-      totDiff: num(r['총가동시간_증감']) ?? +(curTot-prevTot).toFixed(2),
-      avgDiff: num(r['장비당_일평균가동시간_증감']) ?? +(curAvg-prevAvg).toFixed(2)
+      gubun:  pickValue(r, ['구분', '분류']) || '',
+      region: pickValue(r, ['지역', '권역']) || '',
+      hub:    fmtZoneName(pickValue(r, ['허브_위치', 'HUB_NICKNAME', '허브위치', '위치']) || ''),
+      ctrl, curTot, curAvg
     };
-  }).filter(r=>r.region).sort((a,b)=> b.avgDiff - a.avgDiff).slice(0,5);
+  }).filter(r=>r.region).sort((a,b)=> b.curAvg - a.curAvg).slice(0,5);
 
-  const diffCls = v => v>0 ? 'risk' : (v<0 ? 'ok-txt' : '');
-  const sign = v => (v>0?'+':'') + v.toFixed(2);
   tb.innerHTML = data.map((r,i)=>{
     const rank = i===0 ? '<span class="rk1">1</span>' : `<span class="rkn">${i+1}</span>`;
     return `<tr>`+
@@ -250,12 +277,8 @@ function fillIncreaseTable(tbodyId, rows){
       `<td><strong>${r.region}</strong></td>`+
       `<td>${r.hub}</td>`+
       `<td>${r.ctrl}</td>`+
-      `<td>${r.prevTot.toFixed(2)}</td>`+
-      `<td>${r.prevAvg.toFixed(2)}</td>`+
       `<td>${r.curTot.toFixed(2)}</td>`+
       `<td>${r.curAvg.toFixed(2)}</td>`+
-      `<td class="${diffCls(r.totDiff)}">${sign(r.totDiff)}</td>`+
-      `<td class="${diffCls(r.avgDiff)}">${sign(r.avgDiff)}</td>`+
     `</tr>`;
   }).join('');
 }
@@ -316,7 +339,7 @@ async function main(){
   mkOperLine('c-oper-south',  'lg-oper-south',  operSouth);
   mkOperLine('c-oper-gachi',  'lg-oper-gachi',  operGachi);
 
-  /* 5. 전월 대비 증가 TOP5 */
+  /* 5. 사용량 TOP5 */
   fillIncreaseTable('incWorkB', incWork);
   fillIncreaseTable('incOffB',  incOff);
 }

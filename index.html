@@ -7,10 +7,10 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" as="style" crossorigin
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="style.css?v=20260609-a4fix">
+<link rel="stylesheet" href="style.css?v=20260630">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-/* 섹션5 — 전월 대비 증가 TOP5 (11열) */
+/* 섹션5 — 사용량 TOP5 */
 .inc-top5{width:100%;min-width:920px;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums}
 .inc-top5 th,.inc-top5 td{padding:7px 9px;white-space:nowrap;border-bottom:1px solid var(--line-2,#F0F3F8)}
 .inc-top5 thead th{background:#F6F8FC;color:#5B6577;font-weight:700;border-bottom:1px solid var(--line,#E5E9F0)}
@@ -41,7 +41,7 @@
   <div class="hdr-meta">
     <div class="hdr-badge">🏢 전국 통합 리포트</div>
     <div class="hdr-meta-right">
-      <div class="hdr-period">기간<strong>2026.05.01 — 2026.05.31</strong></div>
+      <div class="hdr-period">기간<strong>2026.04.01 — 2026.04.30</strong></div>
       <div class="provided-by">보고서 제공 · AirDeep</div>
     </div>
   </div>
@@ -64,22 +64,22 @@
         </div>
         <div class="kpi">
           <div class="kpi-label">평균 실내온도</div>
-          <div class="kpi-value">25.1<span class="kpi-unit">℃</span></div>
-          <div class="kpi-delta up">▲ 2.8℃</div>
+          <div class="kpi-value">22.2<span class="kpi-unit">℃</span></div>
+          <div class="kpi-delta flat">대표 3개 지점 평균</div>
         </div>
         <div class="kpi">
           <div class="kpi-label">일평균 가동시간</div>
-          <div class="kpi-value">2.3<span class="kpi-unit">h</span></div>
-          <div class="kpi-delta up">▲ 0.6h</div>
+          <div class="kpi-value">0.6<span class="kpi-unit">h</span></div>
+          <div class="kpi-delta flat">권역별 평균</div>
         </div>
         <div class="kpi">
           <div class="kpi-label">적정온도 유지율</div>
-          <div class="kpi-value">71<span class="kpi-unit">%</span></div>
-          <div class="kpi-delta dn">▼ 5%p</div>
+          <div class="kpi-value">86<span class="kpi-unit">%</span></div>
+          <div class="kpi-delta flat">대표 온도 기준</div>
         </div>
       </div>
       <div class="cmnt" style="margin-top:14px"><div class="cmnt-bar" style="background:#2D6BFF"></div>
-        <div class="cmnt-text">5월은 14~15일과 월말 최고기온이 30℃ 이상으로 오르며 냉방 수요가 확대되었습니다. 가동 증가는 근무시간에는 서울 본사 6층·7층과 부천 지역센터, 근무시간 외에는 서울 본사 6층과 대전·부산 지역센터에서 두드러졌습니다.</div>
+        <div class="cmnt-text">4월은 대표 3개 지점 평균 실내온도가 22.2℃로 전반적으로 적정 범위에 있었고, 실외 최고기온은 4월 19일 29.4℃까지 올랐습니다. 가동시간은 서울 본사 1층, 가치만드소 익산, 서울 본사 6층, 부천 지역센터 순으로 높게 나타났으며, 근무시간 외에는 서울 본사 1층의 사용량이 가장 컸습니다.</div>
       </div>
     </div>
     <div class="alerts">
@@ -89,15 +89,15 @@
       </div>
       <div class="alert-item">
         <div class="alert-tag tag-c">ACTION</div>
-        <div class="alert-body"><strong>서울 본사 6층 사무실</strong> · 근무시간 내 총가동 437.67h · 전월 대비 +192h(+78%) 급증 — 냉방 스케줄 및 설정온도 점검 필요</div>
+        <div class="alert-body"><strong>서울 본사 1층</strong> · 4월 평균 가동시간 2.34h, 총 70.22h로 전체 구역 중 가장 높음 — 상시 사용 공간의 스케줄 점검 필요</div>
       </div>
       <div class="alert-item">
         <div class="alert-tag tag-c">CHECK</div>
-        <div class="alert-body"><strong>서울 본사 7층 회의실</strong> · 근무시간 내 총가동 316.75h로 전월(150.58h) 대비 +166.17h 증가 — 회의실 사용일 냉방 스케줄 점검 필요</div>
+        <div class="alert-body"><strong>가치만드소 익산</strong> · 평균 가동시간 1.68h, 4월 23일 최대 6.79h 기록 — 특정일 장시간 가동 원인 확인 필요</div>
       </div>
       <div class="alert-item">
         <div class="alert-tag tag-w">WARN</div>
-        <div class="alert-body"><strong>지역센터 사무실</strong> · 광주는 근무시간 +101.5h, 부천은 +85.25h 증가, 부산·대전은 근무시간 외 증가 확인 — 사용 종료 후 잔여 가동 여부 점검 필요</div>
+        <div class="alert-body"><strong>부천 지역센터</strong> · 평균 1.52h, 5시간 이상 가동일 5일로 지역센터 중 가장 잦음 — 고온일 및 근무 종료 후 잔여 가동 확인 필요</div>
       </div>
     </div>
   </div>
@@ -187,7 +187,7 @@
   <div class="chart-card">
     <div class="chart-3col">
       <div>
-        <div class="chart-sub-title">본사 · 서울 3층</div>
+        <div class="chart-sub-title">본사 · 서울 1층</div>
         <div class="legend-row" id="lg-temp-hq"></div>
         <div class="cw h220"><canvas id="c-temp-hq"></canvas></div>
       </div>
@@ -203,7 +203,7 @@
       </div>
     </div>
     <div class="cmnt" style="margin-top:12px"><div class="cmnt-bar" style="background:#2D6BFF"></div>
-      <div class="cmnt-text">본사, 지역센터, 가치만드소별 여러 구역 및 지역 중 실외 최고기온 대비 실내 평균온도 편차가 크게 나타난 곳을 대표 사례로 선정하였습니다. 해당 지역들은 다른 지역 대비 실내 평균온도가 낮게 유지되는 경향을 보였으며, 실외 고온일에도 온도 편차가 확인되어 냉난방기 가동 수요가 있었을 가능성이 있습니다.</div>
+      <div class="cmnt-text">대표 온도 지점은 서울 1층 22.1℃, 부천 20.9℃, 광주 23.7℃ 수준으로 집계되었습니다. 부천은 20℃ 미만인 날이 반복되어 적정온도 유지율이 56.7%로 낮았고, 광주는 월말 고온 구간에도 25.9℃ 이하로 유지되어 냉방 과열보다는 실내 안정성이 두드러졌습니다.</div>
     </div>
   </div>
 </section>
@@ -221,7 +221,7 @@
     <div class="legend-row" id="lg-oper-hq"></div>
     <div class="cw h220"><canvas id="c-oper-hq"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#2D6BFF"></div>
-      <div class="cmnt-text">별관을 제외한 대부분의 구역에서 5월 중 냉난방기 가동이 확인되었으며, 특히 2층과 3층은 다른 구역 대비 가동시간이 높게 나타나는 구간이 많았습니다. 5월에는 4월 대비 외기 온도가 상승하면서 냉방 수요가 증가한 것으로 보입니다.</div>
+      <div class="cmnt-text">서울 본사는 1층 평균 가동시간이 2.34h로 가장 높았고, 6층 1.63h, 2층 1.28h가 뒤를 이었습니다. 별관은 총 0.25h로 사실상 미가동 수준이었으며, 4월 27일에는 3층·6층·7층이 함께 상승해 특정일 사용 집중이 확인됩니다.</div>
     </div>
   </div>
 
@@ -231,7 +231,7 @@
     <div class="legend-row" id="lg-oper-north"></div>
     <div class="cw h200"><canvas id="c-oper-north"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#22C55E"></div>
-      <div class="cmnt-text">북부에 위치한 지역센터 중 부천 지역센터는 다른 센터 대비 냉난방기 평균 가동시간이 높은 편으로 나타났으며, 5시간 이상 가동된 날도 다수 확인되었습니다. 부천 지역센터의 5월 실내 평균온도가 약 23.7℃로 유지된 점을 고려할 때, 냉방기 가동이 실내온도 유지에 영향을 미쳤을 가능성이 있습니다.</div>
+      <div class="cmnt-text">북부 지역센터는 부천 평균 가동시간이 1.52h로 가장 높고, 5시간 이상 가동된 날도 5일로 가장 많았습니다. 인천은 평균 0.96h로 중간 수준, 강원은 평균 0.03h로 거의 가동이 없어 센터 간 사용 편차가 뚜렷합니다.</div>
     </div>
   </div>
 
@@ -241,7 +241,7 @@
     <div class="legend-row" id="lg-oper-middle"></div>
     <div class="cw h200"><canvas id="c-oper-middle"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#F59E0B"></div>
-      <div class="cmnt-text">중부 지역센터는 전반적으로 냉난방기 평균 가동시간이 높지 않았으나, 대전 지역센터는 5월 중순 이후 가동시간이 급격히 증가하는 흐름을 보였습니다. 특히 5월 하순에는 5시간 이상 가동된 날이 여러 차례 확인되어, 해당 시기 냉방 수요가 집중된 것으로 보입니다.</div>
+      <div class="cmnt-text">중부 지역센터는 안동 0.67h, 대전 0.55h, 예산 0.34h 순으로 평균 가동시간이 높았습니다. 대전은 4월 7일 5.00h까지 올라 단일 피크가 있었지만, 전반적으로는 1h 미만의 낮은 운전 패턴이 중심입니다.</div>
     </div>
   </div>
 
@@ -251,7 +251,7 @@
     <div class="legend-row" id="lg-oper-south"></div>
     <div class="cw h200"><canvas id="c-oper-south"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#E5484D"></div>
-      <div class="cmnt-text">남부 지역센터 중에서는 부산과 광주 지역센터의 냉난방기 평균 가동시간이 다른 지역 대비 비교적 높게 나타났습니다. 또한 대부분의 지역센터에서 5월 중순 이후부터 월말까지 가동시간이 증가하는 구간이 확인되어, 해당 시기에 냉방 수요가 집중된 것으로 보입니다.</div>
+      <div class="cmnt-text">남부 지역센터는 무안 평균 0.58h가 가장 높았고, 4월 17일 6.08h로 단일일 장시간 가동이 확인되었습니다. 부산·전북·제주는 0.3h대, 대구·울산·진주는 거의 미가동 수준으로 남부 내에서도 편차가 큽니다.</div>
     </div>
   </div>
 
@@ -261,61 +261,59 @@
     <div class="legend-row" id="lg-oper-gachi"></div>
     <div class="cw h200"><canvas id="c-oper-gachi"></canvas></div>
     <div class="cmnt"><div class="cmnt-bar" style="background:#7C3AED"></div>
-      <div class="cmnt-text">가치만드소는 대부분의 지역에서 냉난방기 가동이 확인되었으며, 특히 익산은 다른 지역 대비 평균 가동시간이 높게 나타나는 구간이 많았습니다. 또한 5월 중순 이후부터 월말까지 여러 지역에서 가동시간이 증가하여, 해당 기간 냉방 수요가 집중된 것으로 보입니다.</div>
+      <div class="cmnt-text">가치만드소는 익산 평균 1.68h, 광주 1.42h가 높게 나타났습니다. 익산은 4월 23일 최대 6.79h와 5시간 이상 가동일 3일이 확인되어, 월중 특정일 장시간 가동 관리가 필요한 구역입니다.</div>
     </div>
   </div>
 </section>
 
-<!-- 5. 전월 대비 냉난방기 사용량 증가 구역 TOP5 -->
+<!-- 5. 냉난방기 사용량 TOP5 -->
 <section>
   <div class="sec-head">
-    <div class="sec-title"><span class="idx">5</span>전월 대비 냉난방기 사용량 증가 구역 TOP5</div>
-    <div class="sec-sub">장비당 일평균 가동시간 증감 기준 · 상위 5개</div>
+    <div class="sec-title"><span class="idx">5</span>냉난방기 사용량 TOP5</div>
+    <div class="sec-sub">장비당 일평균 가동시간 기준 · 상위 5개</div>
   </div>
 
   <!-- 5-1. 근무시간 -->
   <div class="chart-card">
     <div class="chart-title-row">
-      <div class="chart-card-title">평일 근무시간 냉난방기 사용량 증가 TOP5</div>
-      <div class="chart-sub-pill">전월 대비 기준(08:00~19:00)</div>
+      <div class="chart-card-title">평일 근무시간 냉난방기 사용량 TOP5</div>
+      <div class="chart-sub-pill">4월 기준(08:00~19:00)</div>
     </div>
     <div style="overflow-x:auto">
       <table class="analysis-table inc-top5">
         <thead>
           <tr>
             <th>순위</th><th>구분</th><th>지역</th><th>허브 위치</th><th>제어기 수</th>
-            <th>전월 총가동(h)</th><th>전월 장비당 일평균(h)</th><th>당월 총가동(h)</th><th>당월 장비당 일평균(h)</th>
-            <th>총가동 증감(h)</th><th>장비당 일평균 증감(h)</th>
+            <th>4월 총가동(h)</th><th>4월 장비당 일평균(h)</th>
           </tr>
         </thead>
         <tbody id="incWorkB"></tbody>
       </table>
     </div>
     <div class="cmnt" style="margin-top:12px"><div class="cmnt-bar" style="background:#2D6BFF"></div>
-      <div class="cmnt-text">공간별 장치 수 차이를 고려할 때, 전월 대비 냉난방기 사용량은 총가동시간뿐만 아니라 장비당 일평균 가동시간 변화도 함께 검토할 필요가 있습니다. 평일 근무시간 기준으로 본사 6층 사무실은 전월 대비 총가동시간과 장비당 일평균 가동시간이 모두 가장 크게 증가했습니다. 이어 본사 7층 회의실, 부천 지역센터, 본사 3층 회의실, 광주 지역센터 순으로 증가폭이 크게 나타났으며, 이는 5월 외기 기온 상승에 따른 냉방 수요 증가 영향으로 해석됩니다.</div>
+      <div class="cmnt-text">평일 근무시간 기준 장비당 일평균 사용량은 익산 가치만드소 로비와 서울 본사 6층 사무실이 각각 2.7h로 가장 높았습니다. 총가동시간은 서울 6층이 245h로 가장 크고, 서울 7층 회의실 150h, 광주 가치만드소 2층 144h, 안동 경북센터 119h 순으로 상시 사용 공간 중심의 가동이 두드러집니다.</div>
     </div>
   </div>
 
   <!-- 5-2. 근무시간외 -->
   <div class="chart-card">
     <div class="chart-title-row">
-      <div class="chart-card-title">평일 근무시간 외 냉난방기 사용량 증가 TOP5</div>
-      <div class="chart-sub-pill">전월 대비 기준(19:00~08:00)</div>
+      <div class="chart-card-title">평일 근무시간 외 냉난방기 사용량 TOP5</div>
+      <div class="chart-sub-pill">4월 기준(19:00~08:00)</div>
     </div>
     <div style="overflow-x:auto">
       <table class="analysis-table inc-top5">
         <thead>
           <tr>
             <th>순위</th><th>구분</th><th>지역</th><th>허브 위치</th><th>제어기 수</th>
-            <th>전월 총가동(h)</th><th>전월 장비당 일평균(h)</th><th>당월 총가동(h)</th><th>당월 장비당 일평균(h)</th>
-            <th>총가동 증감(h)</th><th>장비당 일평균 증감(h)</th>
+            <th>4월 총가동(h)</th><th>4월 장비당 일평균(h)</th>
           </tr>
         </thead>
         <tbody id="incOffB"></tbody>
       </table>
     </div>
     <div class="cmnt" style="margin-top:12px"><div class="cmnt-bar" style="background:#F59E0B"></div>
-      <div class="cmnt-text">공간별 장치 수 차이를 고려할 때, 전월 대비 냉난방기 사용량은 총가동시간뿐만 아니라 장비당 일평균 가동시간 변화도 함께 검토할 필요가 있습니다. 평일 근무시간 외 기준에서도 본사 6층 사무실은 전월 대비 총가동시간과 장비당 일평균 가동시간이 모두 가장 크게 증가했습니다. 이어 대전 지역센터와 부산 지역센터 등이 뒤를 이었으며, 근무시간 외 냉난방기 사용은 불필요한 에너지 소비로 이어질 수 있으므로 퇴실 후 전원 OFF 여부 점검 등 관리가 필요합니다.</div>
+      <div class="cmnt-text">평일 근무시간 외 기준으로는 서울 본사 1층이 장비당 일평균 3.0h, 총 134h로 가장 높았습니다. 예산 지역센터 1.0h, 서울 본사 2층과 광주 가치만드소 2층 0.7h가 뒤를 이어, 근무 종료 후 잔여 가동과 예약 운전 여부를 우선 확인할 필요가 있습니다.</div>
     </div>
   </div>
 </section>
@@ -327,6 +325,6 @@
 </footer>
 </div>
 
-<script src="app.js?v=20260609-a4"></script>
+<script src="app.js?v=20260630"></script>
 </body>
 </html>
