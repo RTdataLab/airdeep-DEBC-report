@@ -154,7 +154,7 @@ const redZonePlugin = {
     const { ctx, chartArea, scales:{ y } } = chart;
     if(!chartArea || !y) return;
     const y28 = y.getPixelForValue(HOT_TEMP);
-    if(y28 > chartArea.top){
+    if(y28 > chartArea.top && y28 < chartArea.bottom){
       ctx.save();
       ctx.fillStyle = 'rgba(229,72,77,0.08)';
       ctx.fillRect(chartArea.left, chartArea.top, chartArea.right-chartArea.left, y28-chartArea.top);
@@ -169,10 +169,26 @@ const redZonePlugin = {
 /* x축: 4월 1~30일 전체 표시 */
 const X_TICKS = { maxRotation:0, autoSkip:false, font:{size:8}, color:tickColor() };
 
+function tempYRange(series){
+  const values = [];
+  Object.values(series.map).forEach(arr=>{
+    arr.forEach(v=>{ if(Number.isFinite(v)) values.push(v); });
+  });
+  if(!values.length) return { min:14, max:34 };
+  const lo = Math.min(...values);
+  const hi = Math.max(...values);
+  const pad = Math.max(1, (hi - lo) * 0.12);
+  return {
+    min: Math.floor(lo - pad),
+    max: Math.ceil(hi + pad)
+  };
+}
+
 /* ── 온도 라인 차트 (실외 점선 + 28℃ 빨간 구역) ───────────── */
 function mkTempChart(canvasId, legendId, series){
   const el = document.getElementById(canvasId);
   if(!el) return;
+  const yRange = tempYRange(series);
   const innerNames = series.names.filter(n => n !== OUTDOOR_KEY);
   const datasets = innerNames.map((label,i)=>({
     label, data:series.map[label],
@@ -198,7 +214,7 @@ function mkTempChart(canvasId, legendId, series){
       },
       scales:{
         x:{ grid:{display:false}, ticks:X_TICKS },
-        y:{ min:14, suggestedMax:34, ticks:{callback:v=>v+'℃',font:{size:9.5}}, grid:{color:GRID} }
+        y:{ min:yRange.min, max:yRange.max, ticks:{callback:v=>v+'℃',font:{size:9.5}}, grid:{color:GRID} }
       }
     }
   });
