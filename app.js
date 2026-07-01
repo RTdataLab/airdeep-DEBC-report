@@ -169,27 +169,10 @@ const redZonePlugin = {
 /* x축: 4월 1~30일 전체 표시 */
 const X_TICKS = { maxRotation:0, autoSkip:false, font:{size:8}, color:tickColor() };
 
-function tempYRange(seriesList){
-  const values = [];
-  const list = Array.isArray(seriesList) ? seriesList : [seriesList];
-  list.forEach(series=>{
-    Object.values(series.map).forEach(arr=>{
-      arr.forEach(v=>{ if(Number.isFinite(v)) values.push(v); });
-    });
-  });
-  if(!values.length) return { min:10, max:35, stepSize:5 };
-  const lo = Math.min(...values);
-  const hi = Math.max(...values);
-  const pad = Math.max(1, (hi - lo) * 0.12);
-  return {
-    min: Math.floor((lo - pad) / 5) * 5,
-    max: Math.ceil((hi + pad) / 5) * 5,
-    stepSize: 5
-  };
-}
+const TEMP_Y_RANGE = { min:10, max:32, stepSize:2 };
 
 /* ── 온도 라인 차트 (실외 점선 + 28℃ 빨간 구역) ───────────── */
-function mkTempChart(canvasId, legendId, series, yRange=tempYRange(series)){
+function mkTempChart(canvasId, legendId, series, yRange=TEMP_Y_RANGE){
   const el = document.getElementById(canvasId);
   if(!el) return;
   const innerNames = series.names.filter(n => n !== OUTDOOR_KEY);
@@ -347,7 +330,7 @@ async function main(){
   } catch(e){ showError('CSV 파싱 오류: ' + e.message); return; }
 
   /* 3. 온도 (대표 1개씩) */
-  const commonTempYRange = tempYRange([tempHQ, tempRegional, tempGachi]);
+  const commonTempYRange = TEMP_Y_RANGE;
   mkTempChart('c-temp-hq',       'lg-temp-hq',       tempHQ, commonTempYRange);
   mkTempChart('c-temp-regional', 'lg-temp-regional', tempRegional, commonTempYRange);
   mkTempChart('c-temp-gachi',    'lg-temp-gachi',    tempGachi, commonTempYRange);
