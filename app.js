@@ -169,26 +169,29 @@ const redZonePlugin = {
 /* x축: 4월 1~30일 전체 표시 */
 const X_TICKS = { maxRotation:0, autoSkip:false, font:{size:8}, color:tickColor() };
 
-function tempYRange(series){
+function tempYRange(seriesList){
   const values = [];
-  Object.values(series.map).forEach(arr=>{
-    arr.forEach(v=>{ if(Number.isFinite(v)) values.push(v); });
+  const list = Array.isArray(seriesList) ? seriesList : [seriesList];
+  list.forEach(series=>{
+    Object.values(series.map).forEach(arr=>{
+      arr.forEach(v=>{ if(Number.isFinite(v)) values.push(v); });
+    });
   });
-  if(!values.length) return { min:14, max:34 };
+  if(!values.length) return { min:10, max:35, stepSize:5 };
   const lo = Math.min(...values);
   const hi = Math.max(...values);
   const pad = Math.max(1, (hi - lo) * 0.12);
   return {
-    min: Math.floor(lo - pad),
-    max: Math.ceil(hi + pad)
+    min: Math.floor((lo - pad) / 5) * 5,
+    max: Math.ceil((hi + pad) / 5) * 5,
+    stepSize: 5
   };
 }
 
 /* ── 온도 라인 차트 (실외 점선 + 28℃ 빨간 구역) ───────────── */
-function mkTempChart(canvasId, legendId, series){
+function mkTempChart(canvasId, legendId, series, yRange=tempYRange(series)){
   const el = document.getElementById(canvasId);
   if(!el) return;
-  const yRange = tempYRange(series);
   const innerNames = series.names.filter(n => n !== OUTDOOR_KEY);
   const datasets = innerNames.map((label,i)=>({
     label, data:series.map[label],
@@ -214,7 +217,7 @@ function mkTempChart(canvasId, legendId, series){
       },
       scales:{
         x:{ grid:{display:false}, ticks:X_TICKS },
-        y:{ min:yRange.min, max:yRange.max, ticks:{callback:v=>v+'℃',font:{size:9.5}}, grid:{color:GRID} }
+        y:{ min:yRange.min, max:yRange.max, ticks:{stepSize:yRange.stepSize,callback:v=>v+'℃',font:{size:9.5}}, grid:{color:GRID} }
       }
     }
   });
@@ -344,9 +347,10 @@ async function main(){
   } catch(e){ showError('CSV 파싱 오류: ' + e.message); return; }
 
   /* 3. 온도 (대표 1개씩) */
-  mkTempChart('c-temp-hq',       'lg-temp-hq',       tempHQ);
-  mkTempChart('c-temp-regional', 'lg-temp-regional', tempRegional);
-  mkTempChart('c-temp-gachi',    'lg-temp-gachi',    tempGachi);
+  const commonTempYRange = tempYRange([tempHQ, tempRegional, tempGachi]);
+  mkTempChart('c-temp-hq',       'lg-temp-hq',       tempHQ, commonTempYRange);
+  mkTempChart('c-temp-regional', 'lg-temp-regional', tempRegional, commonTempYRange);
+  mkTempChart('c-temp-gachi',    'lg-temp-gachi',    tempGachi, commonTempYRange);
 
   /* 4. 권역별 가동시간 */
   mkOperLine('c-oper-hq',     'lg-oper-hq',     operHQ);
