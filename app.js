@@ -179,13 +179,13 @@ function mkTempChart(canvasId, legendId, series, yRange=TEMP_Y_RANGE){
   const datasets = innerNames.map((label,i)=>({
     label, data:series.map[label],
     borderColor:LC[i%LC.length], backgroundColor:'transparent',
-    borderWidth:2, fill:false, spanGaps:true, tension:.35, pointRadius:0, pointHoverRadius:4
+    borderWidth:2, fill:false, spanGaps:false, tension:.35, pointRadius:0, pointHoverRadius:4
   }));
   if(series.map[OUTDOOR_KEY]){
     datasets.push({
       label:'실외 최고기온', data:series.map[OUTDOOR_KEY],
       borderColor:'#111827', backgroundColor:'transparent',
-      borderWidth:1.8, borderDash:[5,4], fill:false, spanGaps:true, tension:.35, pointRadius:0, pointHoverRadius:4
+      borderWidth:1.8, borderDash:[5,4], fill:false, spanGaps:false, tension:.35, pointRadius:0, pointHoverRadius:4
     });
   }
   new Chart(el,{
@@ -222,7 +222,7 @@ function mkOperLine(canvasId, legendId, series){
     type:'line',
     data:{ labels:series.labels, datasets:series.names.map((label,i)=>({
       label, data:series.map[label], borderColor:LC[i%LC.length], backgroundColor:'transparent',
-      borderWidth:1.9, fill:false, spanGaps:true, tension:.35, pointRadius:0, pointHoverRadius:4
+      borderWidth:1.9, fill:false, spanGaps:false, tension:.35, pointRadius:0, pointHoverRadius:4
     })) },
     options:{
       responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
