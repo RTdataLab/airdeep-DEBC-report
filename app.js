@@ -28,7 +28,7 @@ const DATA_FILES = {
 
 /* ✏️ 공휴일 날짜 — 주말(토·일)은 자동 계산되고, 여기엔 공휴일만 적으면 됩니다.
    해당 날짜의 x축 라벨이 빨간색으로 표시됩니다. (매달 이 줄만 갱신) */
-const PUBLIC_HOLIDAYS = ['2026-06-03']; // 제9회 전국동시지방선거일
+const PUBLIC_HOLIDAYS = ['2026-07-17']; // 제헌절
 
 function isHolidayDate(s){
   const m = String(s ?? '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -166,10 +166,10 @@ const redZonePlugin = {
   }
 };
 
-/* x축: 6월 1~30일 전체 표시 */
+/* x축: 7월 1~31일 전체 표시 */
 const X_TICKS = { maxRotation:0, autoSkip:false, font:{size:8}, color:tickColor() };
 
-const TEMP_Y_RANGE = { min:21, max:35, stepSize:2 };
+const TEMP_Y_RANGE = { min:22, max:36, stepSize:2 };
 
 /* ── 온도 라인 차트 (실외 점선 + 28℃ 빨간 구역) ───────────── */
 function mkTempChart(canvasId, legendId, series, yRange=TEMP_Y_RANGE){
@@ -261,10 +261,10 @@ function fillIncreaseTable(tbodyId, rows){
   if(!tb) return;
   const data = rows.map(r=>{
     const ctrl    = num(pickValue(r, ['제어기_장치수', '제어기수', '제어기수량', '장치수'])) ?? 0;
-    const prevTot = num(pickValue(r, ['5월_총가동시간', '5월_총가동시간_시간', '총가동시간_시간_5월', '전월_총가동시간', '전월 총가동(h)'])) ?? 0;
-    const prevAvg = num(pickValue(r, ['5월_장비당_일평균가동시간', '장비당_일평균가동시간_시간_5월', '전월_장비당_일평균가동시간', '전월 장비당 일평균(h)'])) ?? 0;
-    const curTot  = num(pickValue(r, ['6월_총가동시간', '6월_총가동시간_시간', '총가동시간_시간_6월', '당월_총가동시간', '당월 총가동(h)'])) ?? 0;
-    const curAvg  = num(pickValue(r, ['6월_장비당_일평균가동시간', '장비당_일평균가동시간_시간_6월', '당월_장비당_일평균가동시간', '당월 장비당 일평균(h)'])) ?? 0;
+    const prevTot = num(pickValue(r, ['6월_총가동시간', '6월_총가동시간_시간', '총가동시간_시간_6월', '전월_총가동시간', '전월 총가동(h)'])) ?? 0;
+    const prevAvg = num(pickValue(r, ['6월_장비당_일평균가동시간', '장비당_일평균가동시간_시간_6월', '전월_장비당_일평균가동시간', '전월 장비당 일평균(h)'])) ?? 0;
+    const curTot  = num(pickValue(r, ['7월_총가동시간', '7월_총가동시간_시간', '총가동시간_시간_7월', '당월_총가동시간', '당월 총가동(h)'])) ?? 0;
+    const curAvg  = num(pickValue(r, ['7월_장비당_일평균가동시간', '장비당_일평균가동시간_시간_7월', '당월_장비당_일평균가동시간', '당월 장비당 일평균(h)'])) ?? 0;
     return {
       gubun:  pickValue(r, ['구분', '분류']) || '',
       region: pickValue(r, ['지역', '권역']) || '',
