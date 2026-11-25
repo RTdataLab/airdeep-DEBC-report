@@ -9,13 +9,16 @@
 const OUTDOOR_KEY = '최고기온(℃)';
 const LC = ['#2D6BFF','#E5484D','#22C55E','#F59E0B','#7C3AED','#0F766E','#BE185D','#0EA5E9','#78716C','#DB2777'];
 const GRID = '#EEF1F6';
-const HOT_TEMP = 28;
+const TEMP_BANDS = [
+  { limit:28, side:'top', color:'229,72,77', label:'28℃ 이상' },
+  { limit:10, side:'bottom', color:'45,107,255', label:'10℃ 이하' }
+];
 let HOLIDAYS = new Set();
 
 /* ✏️ 데이터 파일 설정표 — 데이터팀 파일명을 그대로 적으면 됩니다. (CSV만 지원) */
 const DATA_FILES = {
-  tempHQ:       '3-1.csv',  // 섹션3-1 — 본사 대표(서울 1층) 실내온도
-  tempRegional: '3-2.csv',  // 섹션3-2 — 지역센터 대표(안동) 실내온도
+  tempHQ:       '3-1.csv',  // 섹션3-1 — 본사 대표(서울 7층) 실내온도
+  tempRegional: '3-2.csv',  // 섹션3-2 — 지역센터 대표(부천) 실내온도
   tempGachi:    '3-3.csv',  // 섹션3-3 — 가치만드소 대표(광주) 실내온도
   operHQ:       '4-1.csv',  // 섹션4-1 — 서울 본사 구역별 가동시간
   operNorth:    '4-2.csv',  // 섹션4-2 — 지역센터 북부 가동시간
@@ -28,7 +31,8 @@ const DATA_FILES = {
 
 /* ✏️ 공휴일 날짜 — 주말(토·일)은 자동 계산되고, 여기엔 공휴일만 적으면 됩니다.
    해당 날짜의 x축 라벨이 빨간색으로 표시됩니다. (매달 이 줄만 갱신) */
-const PUBLIC_HOLIDAYS = ['2026-09-24', '2026-09-25']; // 추석 연휴
+const PUBLIC_HOLIDAYS = ['2026-10-05', '2026-10-09']; // 개천절 대체공휴일, 한글날
+const INCREASE_MONTHS = { previous:9, current:10 };
 
 function isHolidayDate(s){
   const m = String(s ?? '').trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -146,61 +150,67 @@ function tickColor(){
   return ctx => HOLIDAYS.has(Number(ctx.tick.label)) ? '#E5484D' : '#5B6577';
 }
 
-/* ── 28℃ 이상 빨간 구역 플러그인 (온도 차트 전용) ──────────── */
-const redZonePlugin = {
-  id: 'redZone',
+/* ── 고온·저온 구간 플러그인 (온도 차트 전용) ───────────────── */
+const temperatureBandPlugin = {
+  id: 'temperatureBand',
   beforeDraw(chart){
-    if(!chart.options.plugins?.redZone?.enabled) return;
     const { ctx, chartArea, scales:{ y } } = chart;
     if(!chartArea || !y) return;
-    const y28 = y.getPixelForValue(HOT_TEMP);
-    if(y28 > chartArea.top && y28 < chartArea.bottom){
-      ctx.save();
-      ctx.fillStyle = 'rgba(229,72,77,0.08)';
-      ctx.fillRect(chartArea.left, chartArea.top, chartArea.right-chartArea.left, y28-chartArea.top);
-      ctx.strokeStyle = 'rgba(229,72,77,0.35)';
-      ctx.lineWidth = 1; ctx.setLineDash([4,3]);
-      ctx.beginPath(); ctx.moveTo(chartArea.left,y28); ctx.lineTo(chartArea.right,y28); ctx.stroke();
-      ctx.setLineDash([]); ctx.restore();
+    const { left, right, top, bottom } = chartArea;
+    ctx.save();
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,3]);
+    for(const { limit, side, color } of TEMP_BANDS){
+      const pixel = y.getPixelForValue(limit);
+      const edge = Math.min(bottom, Math.max(top, pixel));
+      const start = side === 'top' ? top : edge;
+      const end = side === 'top' ? edge : bottom;
+      ctx.fillStyle = `rgba(${color},0.08)`;
+      ctx.fillRect(left, start, right-left, end-start);
+      if(pixel > top && pixel < bottom){
+        ctx.strokeStyle = `rgba(${color},0.35)`;
+        ctx.beginPath(); ctx.moveTo(left,pixel); ctx.lineTo(right,pixel); ctx.stroke();
+      }
     }
+    ctx.restore();
   }
 };
 
-/* x축: 9월 1~30일 전체 표시 */
+/* x축: 월 전체 날짜 표시 */
 const X_TICKS = { maxRotation:0, autoSkip:false, font:{size:8}, color:tickColor() };
 
-const TEMP_Y_RANGE = { min:20, max:34, stepSize:2 };
+const TEMP_Y_RANGE = { min:8, max:32, stepSize:2 };
 
-/* ── 온도 라인 차트 (실외 점선 + 28℃ 빨간 구역) ───────────── */
-function mkTempChart(canvasId, legendId, series, yRange=TEMP_Y_RANGE){
+/* ── 온도 라인 차트 (실외 점선 + 고온·저온 구간) ───────────── */
+function mkTempChart(canvasId, legendId, series){
   const el = document.getElementById(canvasId);
   if(!el) return;
   const innerNames = series.names.filter(n => n !== OUTDOOR_KEY);
   const datasets = innerNames.map((label,i)=>({
     label, data:series.map[label],
     borderColor:LC[i%LC.length], backgroundColor:'transparent',
-    borderWidth:2, fill:false, spanGaps:false, tension:.35, pointRadius:0, pointHoverRadius:4
+    borderWidth:2, fill:false, spanGaps:false, cubicInterpolationMode:'monotone', pointRadius:0, pointHoverRadius:4
   }));
   if(series.map[OUTDOOR_KEY]){
     datasets.push({
       label:'실외 최고기온', data:series.map[OUTDOOR_KEY],
       borderColor:'#111827', backgroundColor:'transparent',
-      borderWidth:1.8, borderDash:[5,4], fill:false, spanGaps:false, tension:.35, pointRadius:0, pointHoverRadius:4
+      borderWidth:1.8, borderDash:[5,4], fill:false, spanGaps:false, cubicInterpolationMode:'monotone', pointRadius:0, pointHoverRadius:4
     });
   }
   new Chart(el,{
     type:'line',
     data:{ labels:series.labels, datasets },
-    plugins:[redZonePlugin],
+    plugins:[temperatureBandPlugin],
     options:{
       responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{display:false}, redZone:{enabled:true},
+        legend:{display:false},
         tooltip:{callbacks:{ title:items=>`${items[0].label}일`, label:c=>` ${c.dataset.label}: ${c.parsed.y}℃` }}
       },
       scales:{
         x:{ grid:{display:false}, ticks:X_TICKS },
-        y:{ min:yRange.min, max:yRange.max, ticks:{stepSize:yRange.stepSize,callback:v=>v+'℃',font:{size:9.5}}, grid:{color:GRID} }
+        y:{ min:TEMP_Y_RANGE.min, max:TEMP_Y_RANGE.max, ticks:{stepSize:TEMP_Y_RANGE.stepSize,autoSkip:false,callback:v=>v+'℃',font:{size:9.5}}, grid:{color:GRID} }
       }
     }
   });
@@ -209,7 +219,9 @@ function mkTempChart(canvasId, legendId, series, yRange=TEMP_Y_RANGE){
     if(lg){
       lg.innerHTML = innerNames.map((n,i)=>`<span><i style="background:${LC[i%LC.length]}"></i>${n}</span>`).join('') +
         `<span><i style="background:#111827;height:0;border-top:2px dashed #111827;width:18px"></i>실외 최고기온</span>` +
-        `<span><i style="background:rgba(229,72,77,0.15);border:1px dashed rgba(229,72,77,0.4);width:12px;height:12px;border-radius:2px"></i>28℃ 이상</span>`;
+        TEMP_BANDS.map(({ color, label }) =>
+          `<span><i style="background:rgba(${color},0.15);border:1px dashed rgba(${color},0.4);width:12px;height:12px;border-radius:2px"></i>${label}</span>`
+        ).join('');
     }
   }
 }
@@ -259,12 +271,15 @@ function fmtZoneName(v){
 function fillIncreaseTable(tbodyId, rows){
   const tb = document.getElementById(tbodyId);
   if(!tb) return;
+  const { previous, current } = INCREASE_MONTHS;
+  const total = (month, period) => [`총가동시간_시간_${month}월`, `${month}월_총가동시간`, `${month}월_총가동시간_시간`, `${period}_총가동시간`, `${period} 총가동(h)`];
+  const average = (month, period) => [`장비당_일평균가동시간_시간_${month}월`, `${month}월_장비당_일평균가동시간`, `${period}_장비당_일평균가동시간`, `${period} 장비당 일평균(h)`];
   const data = rows.map(r=>{
     const ctrl    = num(pickValue(r, ['제어기_장치수', '제어기수', '제어기수량', '장치수'])) ?? 0;
-    const prevTot = num(pickValue(r, ['8월_총가동시간', '8월_총가동시간_시간', '총가동시간_시간_8월', '7월_총가동시간', '7월_총가동시간_시간', '총가동시간_시간_7월', '전월_총가동시간', '전월 총가동(h)'])) ?? 0;
-    const prevAvg = num(pickValue(r, ['8월_장비당_일평균가동시간', '장비당_일평균가동시간_시간_8월', '7월_장비당_일평균가동시간', '장비당_일평균가동시간_시간_7월', '전월_장비당_일평균가동시간', '전월 장비당 일평균(h)'])) ?? 0;
-    const curTot  = num(pickValue(r, ['9월_총가동시간', '9월_총가동시간_시간', '총가동시간_시간_9월', '8월_총가동시간', '8월_총가동시간_시간', '총가동시간_시간_8월', '당월_총가동시간', '당월 총가동(h)'])) ?? 0;
-    const curAvg  = num(pickValue(r, ['9월_장비당_일평균가동시간', '장비당_일평균가동시간_시간_9월', '8월_장비당_일평균가동시간', '장비당_일평균가동시간_시간_8월', '당월_장비당_일평균가동시간', '당월 장비당 일평균(h)'])) ?? 0;
+    const prevTot = num(pickValue(r, total(previous, '전월'))) ?? 0;
+    const prevAvg = num(pickValue(r, average(previous, '전월'))) ?? 0;
+    const curTot  = num(pickValue(r, total(current, '당월'))) ?? 0;
+    const curAvg  = num(pickValue(r, average(current, '당월'))) ?? 0;
     return {
       gubun:  pickValue(r, ['구분', '분류']) || '',
       region: pickValue(r, ['지역', '권역']) || '',
@@ -340,10 +355,9 @@ async function main(){
   } catch(e){ showError('CSV 파싱 오류: ' + e.message); return; }
 
   /* 3. 온도 (대표 1개씩) */
-  const commonTempYRange = TEMP_Y_RANGE;
-  mkTempChart('c-temp-hq',       'lg-temp-hq',       tempHQ, commonTempYRange);
-  mkTempChart('c-temp-regional', 'lg-temp-regional', tempRegional, commonTempYRange);
-  mkTempChart('c-temp-gachi',    'lg-temp-gachi',    tempGachi, commonTempYRange);
+  mkTempChart('c-temp-hq',       'lg-temp-hq',       tempHQ);
+  mkTempChart('c-temp-regional', 'lg-temp-regional', tempRegional);
+  mkTempChart('c-temp-gachi',    'lg-temp-gachi',    tempGachi);
 
   /* 4. 권역별 가동시간 */
   mkOperLine('c-oper-hq',     'lg-oper-hq',     operHQ);
